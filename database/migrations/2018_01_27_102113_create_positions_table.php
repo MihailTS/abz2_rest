@@ -15,7 +15,7 @@ class CreatePositionsTable extends Migration
     {
         Schema::create('positions', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('hashName');
+            $table->string('name');
             $table->timestamps();
         });
     }

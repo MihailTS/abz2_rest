@@ -17,7 +17,8 @@ class Avatar extends Model
 
     public function createThumbnail()
     {
-        //todo
+        $this->thumbnail = 1;
+        $this->save();
     }
 
 }

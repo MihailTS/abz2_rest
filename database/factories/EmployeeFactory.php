@@ -2,23 +2,27 @@
 
 use Faker\Generator as Faker;
 use App\Position;
-use App\Employee;
+use App\Head;
 use App\Avatar;
 
 $factory->define(App\Employee::class, function (Faker $faker) use ($factory) {
-    $position = Position::all()->random();
-    $headArray = Employee::all()->pluck("id")->toArray();
+    $position = Position::inRandomOrder()->first();
+    $head = Head::inRandomOrder()->first();
 
-    $avatar = factory(Avatar::class)->create();
-    $avatar->each(function ($avatar) {
-        $avatar->createThumbnail();
-    });
+    $avatar = null;
+    $hasAvatar = $faker->boolean();
+    if ($hasAvatar) {
+        $avatar = factory(Avatar::class)->create();
+        $avatar->each(function ($avatar) {
+            $avatar->createThumbnail();
+        });
+    }
     return [
         'name' => $faker->name,
-        'employmentDate' => $faker->dateTimeBetween($startDate = '-10 years', $endDate = 'now'),
+        'employmentDate' => $faker->dateTimeBetween('-10 years'),
         'salary' => $faker->randomFloat(2, 1000, 1000000),
-        'position_id' => is_null($position) ? null : $position->id,
-        'head_id' => $faker->randomElement($headArray),
-        'avatar_id' => $avatar->id
+        'position_id' => $position->id,
+        'head_id' => is_null($head) ?: $head->id,
+        'avatar_id' => $hasAvatar ? $avatar->id : null,
     ];
 });

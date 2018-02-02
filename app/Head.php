@@ -9,6 +9,6 @@ class Head extends Employee
     protected $table = 'employees';
 
     public function subordinates(){
-        return $this->hasMany(Employee::class, 'head_id');
+        return $this->belongsToMany(Employee::class, 'head_id');
     }
 }

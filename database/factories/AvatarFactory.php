@@ -1,9 +1,10 @@
 <?php
 
 use Faker\Generator as Faker;
+use App\Avatar as Avatar;
 
-$factory->define(App\Avatar::class, function (Faker $faker) {
-    $filepath = 'public/storage/avatars';
+$factory->define(Avatar::class, function (Faker $faker) {
+    $filepath = Avatar::AVATAR_PATH;
 
     if (!File::exists($filepath)) {
         File::makeDirectory($filepath);

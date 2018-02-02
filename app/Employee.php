@@ -15,6 +15,24 @@ class Employee extends Model
         'head_id'
     ];
 
+
+    /**
+     * @param $employee
+     * @return bool true, если $employee является непосредственным или косвенным начальником
+     */
+    public function isSupreme($employee)
+    {//
+        $result = false;
+        $currentHead = $employee;
+        while ($currentHead = $currentHead->head()->first()) {
+            if ($currentHead->id == $this->id) {
+                $result = true;
+                break;
+            }
+        }
+        return $result;
+    }
+
     public function position(){
         $this->hasOne(Position::class);
     }

@@ -20,6 +20,11 @@ class Avatar extends Model
         $this->belongsTo(Employee::class);
     }
 
+    /**
+     * Создает уменьшенную копию аватара пользователя
+     *
+     * @return \Image сохраненная уменьшенная картинка
+     */
     public function createThumbnail()
     {
         $image = \Image::make($this->path);

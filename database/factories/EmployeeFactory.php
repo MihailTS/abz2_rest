@@ -8,10 +8,10 @@ use App\Employee;
 $factory->define(Employee::class, function (Faker $faker) use ($factory) {
     $position = Position::inRandomOrder()->first();
     $head = Employee::inRandomOrder()->first();
-    $hasHead = is_null($head);
+    $hasHead = !is_null($head);
 
     $avatar = null;
-    $hasAvatar = $faker->boolean();
+    $hasAvatar = $faker->boolean();//аватар установлен для половины пользователей
     if ($hasAvatar) {
         $avatar = factory(Avatar::class)->create();
         $avatar->each(function ($avatar) {
@@ -28,7 +28,7 @@ $factory->define(Employee::class, function (Faker $faker) use ($factory) {
     ];
 });
 
-//корневые сотрудники без начальства
+//корневой сотрудник без начальства
 $factory->defineAs(App\Employee::class, 'root', function (Faker $faker) use ($factory) {
     $position = Position::first();
 

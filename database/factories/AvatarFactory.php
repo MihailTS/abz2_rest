@@ -14,3 +14,4 @@ $factory->define(Avatar::class, function (Faker $faker) {
         'path' => $faker->image($filepath, 400, 300)
     ];
 });
+

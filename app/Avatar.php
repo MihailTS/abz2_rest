@@ -3,7 +3,6 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Intervention\Image;
 use File;
 
 class Avatar extends Model

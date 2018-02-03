@@ -35,7 +35,10 @@ class DatabaseSeeder extends Seeder
             Position::create(["name" => $position]);
         }
 
-        foreach ($employeesQuantityByPosition as $quantity) {
+        foreach ($employeesQuantityByPosition as $key => $quantity) {
+            if ($key === 0) {//корневой сотрудник не имеющий начальства
+                factory(Employee::class, 'root', $quantity)->create();
+            }
             factory(Employee::class, $quantity)->create();
         }
     }

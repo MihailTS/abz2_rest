@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class Employee extends Model
 {
@@ -17,15 +18,15 @@ class Employee extends Model
 
 
     /**
-     * @param $employee
-     * @return bool true, если $employee является непосредственным или косвенным начальником
+     * @param $subordinate
+     * @return bool true, если $subordinate является непосредственным или косвенным подчиненным
      */
-    public function isSupreme($employee)
-    {//
+    public function isHeadOf(Employee $subordinate)
+    {
         $result = false;
-        $currentHead = $employee;
-        while ($currentHead = $currentHead->head()->first()) {
-            if ($currentHead->id == $this->id) {
+        $currentEmployee = $subordinate;
+        while ($currentEmployee = $currentEmployee->head) {
+            if ($currentEmployee->id === $this->id) {
                 $result = true;
                 break;
             }
@@ -34,15 +35,20 @@ class Employee extends Model
     }
 
     public function position(){
-        $this->hasOne(Position::class);
+        return $this->hasOne(Position::class);
     }
 
     public function avatar(){
-        $this->hasOne(Position::class);
+        return $this->hasOne(Position::class);
     }
 
     public function head(){
-        $this->hasOne(Head::class);
+        return $this->hasOne(Employee::class, 'id', 'head_id');
+    }
+
+    public function subordinates()
+    {
+        return $this->belongsToMany(Employee::class, 'head_id');
     }
 
 }

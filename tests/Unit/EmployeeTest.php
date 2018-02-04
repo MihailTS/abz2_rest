@@ -12,14 +12,14 @@ class EmployeeTest extends TestCase
 {
     use DatabaseTransactions;
 
-    public function testIsHeadOfDirectHead()
+    public function test_IsHeadOf_DirectHead()
     {
         $rootEmployee = factory(Employee::class)->create();
         $firstLevelEmployee = factory(Employee::class)->create(['head_id' => ($rootEmployee->id)]);
         $this->assertTrue($rootEmployee->isHeadOf($firstLevelEmployee));
     }
 
-    public function testIsHeadOfIndirectHead()
+    public function test_IsHeadOf_IndirectHead()
     {
         $rootEmployee = factory(Employee::class)->create();
         $firstLevelEmployee = factory(Employee::class)->create(['head_id' => ($rootEmployee->id)]);
@@ -28,7 +28,7 @@ class EmployeeTest extends TestCase
     }
 
 
-    public function testIsNotHead()
+    public function test_IsHeadOf_NotHead()
     {
         $rootEmployee = factory(Employee::class)->create();
         $firstLevelEmployee = factory(Employee::class)->create(['head_id' => ($rootEmployee->id)]);

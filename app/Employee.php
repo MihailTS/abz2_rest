@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 
@@ -34,6 +35,43 @@ class Employee extends Model
         return $result;
     }
 
+
+    /**
+     * Меняет руководителя текущего пользователя на другого
+     * @param Employee $head новый руководитель
+     * @return bool
+     * @throws Exception если новый начальник является подчиненным сотрудника
+     */
+    public function changeHead(Employee $head)
+    {
+        $result = false;
+        if (!is_null($head)) {
+            if ($this->isHeadOf($head)) {
+                throw new Exception('parent');//todo: заменить исключение
+            } else {
+                $this->head_id = $head->id;
+                $result = $this->save();
+            }
+        }
+        return $result;
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        //при удалении сотрудника все его подчиненные переходят к вышестоящему начальнику
+        self::deleting(function ($value) {
+            $subordinates = $value->subordinates();
+            $subordinates->update(['head_id' => $value->head_id]);
+        });
+    }
+
+    public function getSalaryAttribute($value)
+    {
+        return number_format($value, '2', '.', ' ');
+    }
+
     public function position(){
         return $this->hasOne(Position::class);
     }
@@ -48,7 +86,7 @@ class Employee extends Model
 
     public function subordinates()
     {
-        return $this->belongsToMany(Employee::class, 'head_id');
+        return $this->hasMany(Employee::class, 'head_id', 'id');
     }
 
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Employee;
 
+use App\Employee;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -14,7 +15,9 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        //
+        $employees = Employee::all();
+
+        return response()->json(['data' => $employees], 200);
     }
 
     /**
@@ -46,7 +49,9 @@ class EmployeeController extends Controller
      */
     public function show($id)
     {
-        //
+        $employee = Employee::findOrFail($id);
+
+        return response()->json(['data' => $employee], 200);
     }
 
     /**
@@ -80,6 +85,10 @@ class EmployeeController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $employee = Employee::findOrFail($id);
+
+        $employee->delete();
+
+        return response()->json(['data' => $employee], 200);
     }
 }

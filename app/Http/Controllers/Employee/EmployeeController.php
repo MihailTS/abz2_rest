@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Employee;
 
+use App\Avatar;
 use App\Employee;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -38,7 +39,25 @@ class EmployeeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $rules = [
+            'name' => 'required',
+            'salary' => 'required|numeric',
+            'employmentDate' => 'required|date',
+            'head_id' => 'integer|exists:employees,id',
+            'position_id' => 'required|integer|exists:positions,id',
+            'avatar'=>'image'
+        ];
+        $this->validate($request, $rules);
+
+        $data = $request->all();
+
+        $data['avatar_id']=Avatar::create([
+            "path"=>$request->avatar->store()
+        ]);
+
+        $employee = Employee::create($data);
+
+        return response()->json(['data' => $employee], 201);
     }
 
     /**

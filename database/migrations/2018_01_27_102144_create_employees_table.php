@@ -19,7 +19,7 @@ class CreateEmployeesTable extends Migration
             $table->date('employmentDate');
             $table->decimal('salary',8,2);
             $table->integer('head_id')->unsigned()->nullable();//президент компании может не иметь начальника
-            $table->integer('position_id')->unsigned();
+            $table->integer('position_id')->unsigned()->nullable();
             $table->integer('avatar_id')->unsigned()->nullable();
             $table->timestamps();
 

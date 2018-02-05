@@ -30,6 +30,7 @@ $factory->define(Employee::class, function (Faker $faker) use ($factory) {
 //корневой сотрудник без начальства
 $factory->defineAs(App\Employee::class, 'root', function (Faker $faker) use ($factory) {
     $position = Position::first();
+    $hasPosition = !is_null($position);
 
     $avatar = null;
     $hasAvatar = $faker->boolean();
@@ -43,7 +44,7 @@ $factory->defineAs(App\Employee::class, 'root', function (Faker $faker) use ($fa
         'name' => $faker->name,
         'employmentDate' => $faker->dateTimeBetween('-10 years'),
         'salary' => $faker->randomFloat(2, 100000, 1000000),
-        'position_id' => $position->id,
+        'position_id' => $hasPosition ? $position->id : null,
         'head_id' => null,
         'avatar_id' => $hasAvatar ? $avatar->id : null,
     ];

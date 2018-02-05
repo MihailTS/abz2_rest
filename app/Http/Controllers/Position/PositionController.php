@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Position;
 
+use App\Position;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 

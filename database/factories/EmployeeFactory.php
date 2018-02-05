@@ -14,9 +14,6 @@ $factory->define(Employee::class, function (Faker $faker) use ($factory) {
     $hasAvatar = $faker->boolean();//аватар установлен для половины пользователей
     if ($hasAvatar) {
         $avatar = factory(Avatar::class)->create();
-        $avatar->each(function ($avatar) {
-            $avatar->createThumbnail();
-        });
     }
     return [
         'name' => $faker->name,

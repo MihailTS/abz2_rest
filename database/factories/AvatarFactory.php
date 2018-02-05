@@ -2,16 +2,13 @@
 
 use Faker\Generator as Faker;
 use App\Avatar as Avatar;
+use Illuminate\Support\Facades\Storage;
 
 $factory->define(Avatar::class, function (Faker $faker) {
-    $filepath = Avatar::AVATAR_PATH;
-
-    if (!File::exists($filepath)) {
-        File::makeDirectory($filepath);
-    }
+    $avatarFolder = Storage::disk('avatars')->getAdapter()->getPathPrefix();
 
     return [
-        'path' => $faker->image($filepath, 400, 300)
+        'path' => $faker->image($avatarFolder, 400, 300)
     ];
 });
 

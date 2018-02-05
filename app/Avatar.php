@@ -4,11 +4,10 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use File;
+use Illuminate\Support\Facades\Storage;
 
 class Avatar extends Model
 {
-    public const AVATAR_PATH = "public/storage/avatars";
-    public const THUMBNAIL_PATH = "public/storage/thumbnails";
     private const THUMBNAIL_WIDTH = 200;
 
     protected $fillable = [
@@ -24,8 +23,11 @@ class Avatar extends Model
         self::created(function ($avatar) {
             $avatar->createThumbnail();
         });
+
         self::updated(function ($avatar) {
-            $avatar->createThumbnail();
+            if ($avatar->isDirty) {
+                $avatar->createThumbnail();
+            }
         });
     }
 
@@ -41,16 +43,15 @@ class Avatar extends Model
     public function createThumbnail()
     {
         $result=false;
-        if(!is_null($this->path())){
+        if (!is_null($this->path)) {
+            $thumbPath = "thumbnails" . "/" . basename($this->path);
+
             $image = \Image::make($this->path);
-            $thumbPath = Avatar::THUMBNAIL_PATH . "/" . basename($this->path);
             $ratio = $image->height() / $image->width();
-            if (!File::exists(Avatar::THUMBNAIL_PATH)) {
-                File::makeDirectory(Avatar::THUMBNAIL_PATH);
-            }
             $heightWithSaveRatioThumb = intval(self::THUMBNAIL_WIDTH * $ratio);
             $avatarThumbnail = \Image::make($image)->fit(self::THUMBNAIL_WIDTH, $heightWithSaveRatioThumb);
-            $result = $avatarThumbnail->save($thumbPath);
+
+            $result = Storage::disk('avatars')->put($thumbPath, $avatarThumbnail);
             if ($result != null) {
                 $this->thumbnail = $thumbPath;
                 $this->save();

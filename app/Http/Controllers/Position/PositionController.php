@@ -14,7 +14,9 @@ class PositionController extends Controller
      */
     public function index()
     {
-        //
+        $positions = Position::all();
+
+        return response()->json(['data' => $positions], 200);
     }
 
     /**

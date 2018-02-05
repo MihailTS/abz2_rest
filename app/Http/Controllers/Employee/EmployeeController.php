@@ -45,7 +45,7 @@ class EmployeeController extends Controller
             'employmentDate' => 'required|date',
             'head_id' => 'integer|exists:employees,id',
             'position_id' => 'required|integer|exists:positions,id',
-            'avatar'=>'image'
+            'avatar' => 'image'
         ];
         $this->validate($request, $rules);
 
@@ -53,7 +53,7 @@ class EmployeeController extends Controller
 
         $data['avatar_id']=Avatar::create([
             "path"=>$request->avatar->store()
-        ]);
+        ])->id;
 
         $employee = Employee::create($data);
 
@@ -93,7 +93,47 @@ class EmployeeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $employee = findOrFail($id);
+
+        $rules = [
+            'salary' => 'numeric',
+            'employmentDate' => 'date',
+            'head_id' => 'integer|exists:employees,id',
+            'position_id' => 'integer|exists:positions,id',
+            'avatar' => 'image'
+        ];
+        $this->validate($request, $rules);
+
+        if($request->has('name')){
+            $employee->name = $request->name;
+        }
+        if($request->has('salary')){
+            $employee->salary = $request->salary;
+        }
+        if($request->has('employmentDate')){
+            $employee->employmentDate = $request->employmentDate;
+        }
+        if($request->has('head_id')){
+            $employee->head_id = $request->head_id;
+        }
+        if($request->has('position_id')){
+            $employee->position_id = $request->position_id;
+        }
+        if($request->has('avatar')){
+
+            $avatar=Avatar::create([
+                "path" => $request->avatar->store()
+            ]);
+            $employee->avatar_id = $avatar->id;
+        }
+
+        if(!$employee->isDirty()){
+            return response()->json(['error' => 'Данные должны отличаться', 'code'=> 422], 422);
+        }
+
+        $employee->save();
+
+        return response()->json(['data' => $employee], 200);
     }
 
     /**

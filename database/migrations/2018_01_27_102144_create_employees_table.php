@@ -24,7 +24,7 @@ class CreateEmployeesTable extends Migration
             $table->timestamps();
 
             $table->foreign('head_id')->references('id')->on('employees');
-            $table->foreign('position_id')->references('id')->on('positions');
+            $table->foreign('position_id')->references('id')->on('positions')->onDelete('SET NULL');;
             $table->foreign('avatar_id')->references('id')->on('avatars');
         });
     }

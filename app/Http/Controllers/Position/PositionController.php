@@ -38,7 +38,16 @@ class PositionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $rules = [
+            'name' => 'required|unique:positions'
+        ];
+        $this->validate($request, $rules);
+
+        $data = $request->all();
+
+        $position = Position::create($data);
+
+        return response()->json(['data' => $position], 201);
     }
 
     /**
@@ -49,7 +58,9 @@ class PositionController extends Controller
      */
     public function show($id)
     {
-        //
+        $position = Position::findOrFail($id);
+
+        return response()->json(['data' => $position], 200);
     }
 
     /**
@@ -72,7 +83,19 @@ class PositionController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $position = Position::findOrFail($id);
+
+        if ($request->has('name')) {
+            $position->name = $request->name;
+        }
+
+        if (!$position->isDirty()) {
+            return response()->json(['error' => 'Данные должны отличаться', 'code' => 422], 422);
+        }
+
+        $position->save();
+
+        return response()->json(['data' => $position], 200);
     }
 
     /**
@@ -83,6 +106,11 @@ class PositionController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $position = Position::findOrFail($id);
+
+        $position->delete();
+
+        return response()->json(['data' => $position], 200);
+
     }
 }

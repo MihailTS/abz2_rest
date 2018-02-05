@@ -8,7 +8,9 @@ use App\Employee;
 $factory->define(Employee::class, function (Faker $faker) use ($factory) {
     $position = Position::inRandomOrder()->first();
     $head = Employee::inRandomOrder()->first();
+
     $hasHead = !is_null($head);
+    $hasPosition = !is_null($position);
 
     $avatar = null;
     $hasAvatar = $faker->boolean();//аватар установлен для половины пользователей
@@ -19,7 +21,7 @@ $factory->define(Employee::class, function (Faker $faker) use ($factory) {
         'name' => $faker->name,
         'employmentDate' => $faker->dateTimeBetween('-10 years'),
         'salary' => $faker->randomFloat(2, 1000, 1000000),
-        'position_id' => $position->id,
+        'position_id' => $hasPosition ? $position->id : null,
         'head_id' => $hasHead ? $head->id : null,
         'avatar_id' => $hasAvatar ? $avatar->id : null,
     ];

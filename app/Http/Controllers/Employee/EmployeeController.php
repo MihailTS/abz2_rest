@@ -93,7 +93,7 @@ class EmployeeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $employee = findOrFail($id);
+        $employee = Employee::findOrFail($id);
 
         $rules = [
             'salary' => 'numeric',

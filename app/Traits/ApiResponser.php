@@ -9,12 +9,12 @@ trait ApiResponser
 {
     private function successResponce($data, $code)
     {
-        return responce()->json($data, $code);
+        return response()->json($data, $code);
     }
 
     protected function errorResponce($message, $code)
     {
-        return responce()->json(['error' => $message, 'code' => $code], $code);
+        return response()->json(['error' => $message, 'code' => $code], $code);
     }
 
     protected function showAll(Collection $collection, $code = 200)

@@ -21,11 +21,13 @@ class CreateEmployeesTable extends Migration
             $table->integer('head_id')->unsigned()->nullable();//президент компании может не иметь начальника
             $table->integer('position_id')->unsigned()->nullable();
             $table->integer('avatar_id')->unsigned()->nullable();
-            $table->timestamps();
 
             $table->foreign('head_id')->references('id')->on('employees');
             $table->foreign('position_id')->references('id')->on('positions')->onDelete('SET NULL');;
             $table->foreign('avatar_id')->references('id')->on('avatars');
+
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -17,7 +17,9 @@ class CreateAvatarsTable extends Migration
             $table->increments('id');
             $table->string('path');
             $table->string('thumbnail')->nullable();
+
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

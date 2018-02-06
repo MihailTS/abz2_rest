@@ -4,10 +4,14 @@ namespace App;
 
 use Exception;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Log;
 
 class Employee extends Model
 {
+    use SoftDeletes;
+
+    protected $dates = ['deleted_at'];
     protected $fillable = [
         'name',
         'salary',

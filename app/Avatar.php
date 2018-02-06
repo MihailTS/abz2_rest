@@ -3,13 +3,16 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use File;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
 
 class Avatar extends Model
 {
+    use SoftDeletes;
+
     private const THUMBNAIL_WIDTH = 200;
 
+    protected $dates = ['deleted_at'];
     protected $fillable = [
         'path',
         'thumbnail'
@@ -48,8 +51,8 @@ class Avatar extends Model
 
             $image = \Image::make($this->path);
             $ratio = $image->height() / $image->width();
-            $heightWithSaveRatioThumb = intval(self::THUMBNAIL_WIDTH * $ratio);
-            $avatarThumbnail = \Image::make($image)->fit(self::THUMBNAIL_WIDTH, $heightWithSaveRatioThumb);
+            $heightWithSaveRatioThumb = intval(Avatar::THUMBNAIL_WIDTH * $ratio);
+            $avatarThumbnail = \Image::make($image)->fit(Avatar::THUMBNAIL_WIDTH, $heightWithSaveRatioThumb);
 
             $result = Storage::disk('avatars')->put($thumbPath, $avatarThumbnail);
             if ($result != null) {

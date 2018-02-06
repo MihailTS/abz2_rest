@@ -63,15 +63,12 @@ class EmployeeController extends ApiController
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  Employee $employee
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Employee $employee)
     {
-        $employee = Employee::findOrFail($id);
-
         return $this->showOne($employee);
-
     }
 
     /**
@@ -89,13 +86,11 @@ class EmployeeController extends ApiController
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  Employee $employee
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Employee $employee)
     {
-        $employee = Employee::findOrFail($id);
-
         $rules = [
             'salary' => 'numeric',
             'employmentDate' => 'date',
@@ -140,13 +135,11 @@ class EmployeeController extends ApiController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  Employee $employee
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Employee $employee)
     {
-        $employee = Employee::findOrFail($id);
-
         $employee->delete();
 
         return $this->showOne($employee);

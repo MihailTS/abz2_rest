@@ -6,6 +6,10 @@ use App\Traits\ApiResponser;
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Validation\ModelNotFoundException;
+use Illuminate\Validation\NotFoundHttpException;
+use Illuminate\Validation\MethodNotAllowedHttpException;
+
 class Handler extends ExceptionHandler
 {
     use ApiResponser;
@@ -52,6 +56,19 @@ class Handler extends ExceptionHandler
     {
         if($exception instanceof ValidationException){
             return $this->convertValidationExceptionToResponse($exception, $request);
+        }
+        if($exception instanceof ModelNotFoundException){
+            $modelName = strtolower(class_basename($exception->getModel()));
+            return $this->errorResponce("{$modelName} c таким идентификатором отсутствует", 404);
+        }
+        if($exception instanceof MethodNotAllowedHttpException){
+            return $this->errorResponce("Некорректный метод для запроса", 405);
+        }
+        if($exception instanceof NotFoundHttpException){
+            return $this->errorResponce("Страница не найдена", 404);
+        }
+        if($exception instanceof HttpException){
+            return $this->errorResponce($exception->getMessage(), $exception->getStatusCode());
         }
         return parent::render($request, $exception);
     }

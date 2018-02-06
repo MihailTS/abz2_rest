@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Employee;
 use App\Avatar;
 use App\Employee;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController;
 
-class EmployeeController extends Controller
+class EmployeeController extends ApiController
 {
     /**
      * Display a listing of the resource.
@@ -18,7 +18,7 @@ class EmployeeController extends Controller
     {
         $employees = Employee::all();
 
-        return response()->json(['data' => $employees], 200);
+        return $this->showAll($employees);
     }
 
     /**
@@ -57,7 +57,7 @@ class EmployeeController extends Controller
 
         $employee = Employee::create($data);
 
-        return response()->json(['data' => $employee], 201);
+        return $this->showOne($employee, 201);
     }
 
     /**
@@ -70,7 +70,8 @@ class EmployeeController extends Controller
     {
         $employee = Employee::findOrFail($id);
 
-        return response()->json(['data' => $employee], 200);
+        return $this->showOne($employee);
+
     }
 
     /**
@@ -128,12 +129,12 @@ class EmployeeController extends Controller
         }
 
         if(!$employee->isDirty()){
-            return response()->json(['error' => 'Данные должны отличаться', 'code'=> 422], 422);
+            return $this->errorResponce('Данные должны отличаться', 422);
         }
 
         $employee->save();
 
-        return response()->json(['data' => $employee], 200);
+        return $this->showOne($employee);
     }
 
     /**
@@ -148,6 +149,6 @@ class EmployeeController extends Controller
 
         $employee->delete();
 
-        return response()->json(['data' => $employee], 200);
+        return $this->showOne($employee);
     }
 }

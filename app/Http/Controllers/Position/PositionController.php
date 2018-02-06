@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Position;
 
 use App\Position;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController;
 
-class PositionController extends Controller
+class PositionController extends ApiController
 {
     /**
      * Display a listing of the resource.
@@ -17,7 +17,7 @@ class PositionController extends Controller
     {
         $positions = Position::all();
 
-        return response()->json(['data' => $positions], 200);
+        return $this->showAll($positions);
     }
 
     /**
@@ -47,7 +47,7 @@ class PositionController extends Controller
 
         $position = Position::create($data);
 
-        return response()->json(['data' => $position], 201);
+        return $this->showOne($position, 201);
     }
 
     /**
@@ -60,7 +60,7 @@ class PositionController extends Controller
     {
         $position = Position::findOrFail($id);
 
-        return response()->json(['data' => $position], 200);
+        return $this->showOne($position);
     }
 
     /**
@@ -90,12 +90,12 @@ class PositionController extends Controller
         }
 
         if (!$position->isDirty()) {
-            return response()->json(['error' => 'Данные должны отличаться', 'code' => 422], 422);
+            return $this->errorResponce('Данные должны отличаться', 422);
         }
 
         $position->save();
 
-        return response()->json(['data' => $position], 200);
+        return $this->showOne($position);
     }
 
     /**
@@ -110,7 +110,7 @@ class PositionController extends Controller
 
         $position->delete();
 
-        return response()->json(['data' => $position], 200);
+        return $this->showOne($position);
 
     }
 }

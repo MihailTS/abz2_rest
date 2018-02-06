@@ -6,6 +6,8 @@ use App\Traits\ApiResponser;
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Validation\ModelNotFoundException;
+
 class Handler extends ExceptionHandler
 {
     use ApiResponser;
@@ -52,6 +54,10 @@ class Handler extends ExceptionHandler
     {
         if($exception instanceof ValidationException){
             return $this->convertValidationExceptionToResponse($exception, $request);
+        }
+        if($exception instanceof ModelNotFoundException){
+            $modelName = strtolower(class_basename($exception->getModel()));
+            return $this->errorResponce("{$modelName} c таким идентификатором отсутствует", 404);
         }
         return parent::render($request, $exception);
     }

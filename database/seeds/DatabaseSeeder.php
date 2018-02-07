@@ -4,6 +4,7 @@ use Illuminate\Database\Seeder;
 use App\Employee;
 use App\Avatar;
 use App\Position;
+use Illuminate\Support\Facades\Storage;
 
 class DatabaseSeeder extends Seeder
 {
@@ -14,12 +15,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        $avatarPath = Storage::disk('avatars')->getAdapter()->getPathPrefix();
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
 
         Avatar::truncate();
         Position::truncate();
         Employee::truncate();
 
+
+        if(File::exists($avatarPath)) {
+            File::cleanDirectory($avatarPath);
+        }else{
+            File::makeDirectory($avatarPath);
+        }
         $positions = [//список должностей и их количество
             'Президент' => 1,
             'Руководитель отдела' => 5,

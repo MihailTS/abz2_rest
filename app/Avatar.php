@@ -27,6 +27,10 @@ class Avatar extends Model
             $avatar->createThumbnail();
         });
 
+        self::updating(function($avatar){
+            $avatar->deleteFiles();
+        });
+
         self::updated(function ($avatar) {
             if ($avatar->isDirty) {
                 $avatar->createThumbnail();

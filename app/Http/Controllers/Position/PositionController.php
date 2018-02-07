@@ -81,6 +81,11 @@ class PositionController extends ApiController
      */
     public function update(Request $request, Position $position)
     {
+        $rules = [
+            'name' => 'unique:positions'
+        ];
+        $this->validate($request, $rules);
+
         if ($request->has('name')) {
             $position->name = $request->name;
         }

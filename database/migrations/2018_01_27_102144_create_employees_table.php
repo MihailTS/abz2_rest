@@ -23,8 +23,8 @@ class CreateEmployeesTable extends Migration
             $table->integer('avatar_id')->unsigned()->nullable();
 
             $table->foreign('head_id')->references('id')->on('employees');
-            $table->foreign('position_id')->references('id')->on('positions')->onDelete('SET NULL');;
-            $table->foreign('avatar_id')->references('id')->on('avatars');
+            $table->foreign('position_id')->references('id')->on('positions')->onDelete('SET NULL');
+            $table->foreign('avatar_id')->references('id')->on('avatars')->onDelete('SET NULL');
 
             $table->timestamps();
             $table->softDeletes();

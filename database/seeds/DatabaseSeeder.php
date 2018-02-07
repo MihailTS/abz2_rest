@@ -22,12 +22,12 @@ class DatabaseSeeder extends Seeder
         Position::truncate();
         Employee::truncate();
 
-
         if(File::exists($avatarPath)) {
             File::cleanDirectory($avatarPath);
         }else{
             File::makeDirectory($avatarPath);
         }
+
         $positions = [//список должностей и их количество
             'Президент' => 1,
             'Руководитель отдела' => 5,

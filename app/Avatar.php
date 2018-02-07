@@ -32,6 +32,10 @@ class Avatar extends Model
                 $avatar->createThumbnail();
             }
         });
+
+        self::deleted(function($avatar){
+           $avatar->deleteFiles();
+        });
     }
 
     public function employee(){
@@ -61,6 +65,14 @@ class Avatar extends Model
             }
         }
         return $result;
+    }
+
+    /**
+     *  удаляет файл аватара и изображение для предпросмотра
+     */
+    private function deleteFiles(){
+        Storage::disk('avatars')->delete($this->path);
+        Storage::disk('avatars')->delete($this->thumbnail);
     }
 
 }

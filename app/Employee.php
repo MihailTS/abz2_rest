@@ -65,9 +65,11 @@ class Employee extends Model
         parent::boot();
 
         //при удалении сотрудника все его подчиненные переходят к вышестоящему начальнику
-        self::deleting(function ($value) {
-            $subordinates = $value->subordinates();
-            $subordinates->update(['head_id' => $value->head_id]);
+        self::deleting(function ($employee) {
+            $subordinates = $employee->subordinates();
+            $subordinates->update(['head_id' => $employee->head_id]);
+
+            $employee->avatar->delete();
         });
     }
 
@@ -81,7 +83,7 @@ class Employee extends Model
     }
 
     public function avatar(){
-        return $this->hasOne(Position::class);
+        return $this->hasOne(Avatar::class);
     }
 
     public function head(){

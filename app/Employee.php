@@ -79,15 +79,15 @@ class Employee extends Model
     }
 
     public function position(){
-        return $this->hasOne(Position::class);
+        return $this->belongsTo(Position::class);
     }
 
     public function avatar(){
-        return $this->hasOne(Avatar::class);
+        return $this->belongsTo(Avatar::class);
     }
 
     public function head(){
-        return $this->hasOne(Employee::class, 'id', 'head_id');
+        return $this->belongsTo(Employee::class, 'id', 'head_id');
     }
 
     public function subordinates()

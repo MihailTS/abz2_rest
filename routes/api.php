@@ -15,5 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::resource('employees','Employee\EmployeeController');
 Route::resource('employees.subordinates','Employee\EmployeeSubordinatesController',['only'=>'index']);
+Route::resource('employees.position', 'Employee\EmployeePositionController', ['only' => 'index']);
+Route::resource('employees.head', 'Employee\EmployeeHeadController', ['only' => 'index']);
 
 Route::resource('positions','Position\PositionController');

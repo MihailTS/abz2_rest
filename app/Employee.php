@@ -88,7 +88,7 @@ class Employee extends Model
     }
 
     public function head(){
-        return $this->belongsTo(Employee::class, 'id', 'head_id');
+        return $this->hasOne(Employee::class, 'id', 'head_id');
     }
 
     public function subordinates()

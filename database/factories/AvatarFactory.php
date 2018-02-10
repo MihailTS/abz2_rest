@@ -6,9 +6,9 @@ use Illuminate\Support\Facades\Storage;
 
 $factory->define(Avatar::class, function (Faker $faker) {
     $avatarFolder = Storage::disk('avatars')->getAdapter()->getPathPrefix();
-
     return [
-        'path' => $faker->image($avatarFolder, 400, 300)
+        'path' => $faker->image($avatarFolder, 400, 300, null, false)
+
     ];
 });
 

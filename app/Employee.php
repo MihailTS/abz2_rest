@@ -2,14 +2,16 @@
 
 namespace App;
 
+use App\Transformers\EmployeeTransformer;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Log;
 
 class Employee extends Model
 {
     use SoftDeletes;
+
+    public $transformer = EmployeeTransformer::class;
 
     protected $dates = ['deleted_at'];
     protected $fillable = [
@@ -70,6 +72,10 @@ class Employee extends Model
             $subordinates->update(['head_id' => $employee->head_id]);
 
             $employee->avatar->delete();
+        });
+
+        self::updating(function ($employee) {
+            $employee->avatar->deleteFiles();
         });
     }
 

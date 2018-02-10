@@ -55,9 +55,7 @@ class Avatar extends Model
 
             $image = \Image::make(Storage::disk('avatars')->url($this->path));
 
-            $avatarThumbnail = \Image::make($image)->resize(Avatar::THUMBNAIL_WIDTH, null, function ($constraint) {
-                $constraint->aspectRatio();
-            });
+            $avatarThumbnail = \Image::make($image)->widen(Avatar::THUMBNAIL_WIDTH);
 
             $result = Storage::disk('avatars')->put($thumbPath, $avatarThumbnail);
             if ($result != null) {

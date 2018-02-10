@@ -58,7 +58,7 @@ class Avatar extends Model
             $avatarThumbnail = \Image::make($image)->widen(Avatar::THUMBNAIL_WIDTH);
 
             $result = Storage::disk('avatars')->put($thumbPath, $avatarThumbnail);
-            if ($result != null) {
+            if (!is_null($result)) {
                 $this->thumbnail = $thumbPath;
                 $this->save();
             }

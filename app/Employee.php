@@ -79,11 +79,6 @@ class Employee extends Model
         });
     }
 
-    public function getSalaryAttribute($value)
-    {
-        return number_format($value, '2', '.', ' ');
-    }
-
     public function position(){
         return $this->belongsTo(Position::class);
     }

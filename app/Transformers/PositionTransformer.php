@@ -7,6 +7,15 @@ use League\Fractal\TransformerAbstract;
 
 class PositionTransformer extends TransformerAbstract
 {
+
+    private static $attributesMap = [
+        'id' => "id",
+        'name' => "name",
+        'createdTime' => "created_at",
+        'lastModifiedTime' => "modified_at",
+        'deletedTime' => "deleted_at",
+    ];
+
     /**
      * A Fractal transformer.
      *
@@ -22,5 +31,10 @@ class PositionTransformer extends TransformerAbstract
             'lastModifiedTime' => (string)$position->modified_at,
             'deletedTime' => isset($position->deleted_at) ? (string)$position->deleted_at : null
         ];
+    }
+
+    public static function getOriginalAttributeName($index)
+    {
+        return isset(self::$attributesMap[$index]) ? self::$attributesMap[$index] : null;
     }
 }

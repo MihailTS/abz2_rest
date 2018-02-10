@@ -24,9 +24,10 @@ trait ApiResponser
         }
         $transformer = $collection->first()->transformer;
 
-        $collection = $this->sortData($collection);
+        $collection = $this->filterData($collection, $transformer);
+        $collection = $this->sortData($collection, $transformer);
         $collection = $this->transformData($collection, $transformer);
-        return $this->successResponce(['data' => $collection], $code);
+        return $this->successResponce($collection, $code);
     }
 
     protected function showOne(Model $instance, $code = 200)
@@ -34,14 +35,25 @@ trait ApiResponser
         $transformer = $instance->transformer;
         $instance = $this->transformData($instance, $transformer);
 
-        return $this->successResponce(['data' => $instance], $code);
+        return $this->successResponce($instance, $code);
     }
 
-    protected function sortData(Collection $collection)
+    protected function sortData(Collection $collection, $transformer)
     {
         if (request()->has('sort_by')) {
-            $attribute = request()->sort_by;
+            $attribute = $transformer::getOriginalAttributeName(request()->sort_by);
             $collection = $collection->sortBy->{$attribute};
+        }
+        return $collection;
+    }
+
+    protected function filterData(Collection $collection, $transformer)
+    {
+        foreach (request()->query() as $query => $value) {
+            $attribute = $transformer::getOriginalAttributeName($query);
+            if (isset($attribute, $value)) {
+                $collection = $collection->where($attribute, $value);
+            }
         }
         return $collection;
     }

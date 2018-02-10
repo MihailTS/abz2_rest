@@ -8,6 +8,18 @@ use League\Fractal\TransformerAbstract;
 
 class EmployeeTransformer extends TransformerAbstract
 {
+    private static $attributesMap = [
+        'id' => "id",
+        'name' => "name",
+        'salary' => "salary",
+        'employmentDate' => "employmentDate",
+        'position' => "position_id",
+        'avatar' => "avatar_id",
+        'head' => "head_id",
+        'createdTime' => "created_at",
+        'lastModifiedTime' => "modified_at",
+        'deletedTime' => "deleted_at",
+    ];
     /**
      * A Fractal transformer.
      *
@@ -28,5 +40,10 @@ class EmployeeTransformer extends TransformerAbstract
             'lastModifiedTime' => isset($employee->modified_at) ? (string)$employee->modified_at : null,
             'deletedTime' => isset($employee->deleted_at) ? (string)$employee->deleted_at : null
         ];
+    }
+
+    public static function getOriginalAttributeName($index)
+    {
+        return isset(self::$attributesMap[$index]) ? self::$attributesMap[$index] : null;
     }
 }

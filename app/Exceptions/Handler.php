@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use HttpException;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\Debug\Exception\FatalErrorException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -51,7 +52,7 @@ class Handler extends ExceptionHandler
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Exception  $exception
-     * @return \Illuminate\Http\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function render($request, Exception $exception)
     {
@@ -69,6 +70,9 @@ class Handler extends ExceptionHandler
             return $this->errorResponce("Страница не найдена", 404);
         }
         if($exception instanceof HttpException){
+            return $this->errorResponce($exception->getMessage(), $exception->getStatusCode());
+        }
+        if ($exception instanceof FatalErrorException) {
             return $this->errorResponce($exception->getMessage(), $exception->getStatusCode());
         }
         return parent::render($request, $exception);

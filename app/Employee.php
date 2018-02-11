@@ -23,7 +23,6 @@ class Employee extends Model
         'head_id'
     ];
 
-
     /**
      * @param $subordinate
      * @return bool true, если $subordinate является непосредственным или косвенным подчиненным

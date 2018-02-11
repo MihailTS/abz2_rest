@@ -3,11 +3,19 @@
 namespace App\Http\Controllers\Position;
 
 use App\Position;
+use App\Transformers\PositionTransformer;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ApiController;
 
 class PositionController extends ApiController
 {
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->middleware('transform.input:' . PositionTransformer::class)->only(['store', 'update']);
+    }
+
     /**
      * Display a listing of the resource.
      *

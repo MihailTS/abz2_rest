@@ -4,11 +4,21 @@ namespace App\Http\Controllers\Employee;
 
 use App\Avatar;
 use App\Employee;
+use App\Transformers\EmployeeTransformer;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ApiController;
 
 class EmployeeController extends ApiController
 {
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->middleware('transform.input:' . EmployeeTransformer::class)->only(['store', 'update']);
+    }
+
+
     /**
      * Display a listing of the resource.
      *

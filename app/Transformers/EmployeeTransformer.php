@@ -53,6 +53,12 @@ class EmployeeTransformer extends TransformerAbstract
         return isset(self::$attributesMap[$index]) ? self::$attributesMap[$index] : null;
     }
 
+    public static function getTransformedAttributeName($index)
+    {
+        $transformedAttributesMap = array_flip(self::$attributesMap);
+        return isset($transformedAttributesMap[$index]) ? $transformedAttributesMap[$index] : null;
+    }
+
     private function getLinksArray(Employee $employee): array
     {
         $links = [

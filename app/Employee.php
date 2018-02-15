@@ -70,11 +70,15 @@ class Employee extends Model
             $subordinates = $employee->subordinates();
             $subordinates->update(['head_id' => $employee->head_id]);
 
-            $employee->avatar->delete();
+            if ($employee->avatar) {
+                $employee->avatar->delete();
+            }
         });
 
         self::updating(function ($employee) {
-            $employee->avatar->deleteFiles();
+            if ($employee->isDirty('avatar') && $employee->avatar) {
+                $employee->avatar->deleteFiles();
+            }
         });
     }
 

@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use HttpException;
+use Illuminate\Session\TokenMismatchException;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\Debug\Exception\FatalErrorException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
@@ -68,6 +69,9 @@ class Handler extends ExceptionHandler
         }
         if($exception instanceof NotFoundHttpException){
             return $this->errorResponce("Страница не найдена", 404);
+        }
+        if ($exception instanceof TokenMismatchException) {
+            return redirect()->back()->withInput($request->input());
         }
         if($exception instanceof HttpException){
             return $this->errorResponce($exception->getMessage(), $exception->getStatusCode());

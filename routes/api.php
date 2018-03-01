@@ -12,10 +12,13 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::group([
+    'prefix' => 'v1',
+], function () {
+    Route::resource('employees', 'Employee\EmployeeController');
+    Route::resource('employees.subordinates', 'Employee\EmployeeSubordinatesController', ['only' => 'index']);
+    Route::resource('employees.position', 'Employee\EmployeePositionController', ['only' => 'index']);
+    Route::resource('employees.head', 'Employee\EmployeeHeadController', ['only' => 'index']);
 
-Route::resource('employees','Employee\EmployeeController');
-Route::resource('employees.subordinates','Employee\EmployeeSubordinatesController',['only'=>'index']);
-Route::resource('employees.position', 'Employee\EmployeePositionController', ['only' => 'index']);
-Route::resource('employees.head', 'Employee\EmployeeHeadController', ['only' => 'index']);
-
-Route::resource('positions','Position\PositionController');
+    Route::resource('positions', 'Position\PositionController');
+});

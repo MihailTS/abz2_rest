@@ -58,7 +58,11 @@ trait ApiResponser
         foreach (request()->query() as $query => $value) {
             $attribute = $transformer::getOriginalAttributeName($query);
             if (isset($attribute, $value)) {
-                $collection = $collection->where($attribute, $value);
+                if ($value === "null") {
+                    $collection = $collection->where($attribute, null);
+                } else {
+                    $collection = $collection->where($attribute, $value);
+                }
             }
         }
         return $collection;

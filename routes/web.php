@@ -29,5 +29,6 @@ $this->post('password/reset', 'Auth\ResetPasswordController@reset');
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/', function () {
-    return view('Welcome');
-})->middleware('guest');
+    return view('main');
+})/*->middleware('guest')*/
+;

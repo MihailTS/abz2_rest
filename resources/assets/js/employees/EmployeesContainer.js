@@ -3,9 +3,10 @@ import Employees from './Employees';
 import {bindActionCreators} from 'redux';
 import * as actions from './actions';
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
     return {
-        employees: state.employeesState.employees
+        currentEmployee: state.employeesState.employees[ownProps.id],
+        loadingData: state.employeesState.loadingData[ownProps.id],
     };
 }
 

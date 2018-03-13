@@ -9,7 +9,6 @@ export default class App extends React.Component {
                 <EmployeesContainer
                     key={0}
                     id={0}
-                    name={'root'}
                     level={0}
                 />
             </div>

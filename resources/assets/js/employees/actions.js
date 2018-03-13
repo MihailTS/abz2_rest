@@ -10,28 +10,45 @@ export const getEmployees = (employees, head = 0, childIDs, loadingData) => ({
     childIDs,
     loadingData
 });
-export const getEmployeesData = (head) => dispatch => {
-    let url = "";
+export const getEmployeesData = (head, loadingData) => dispatch => {
+    let url = "/api/v1/employees";
+    let urlParams = {};
     const userSchema = new schema.Entity('employees');
     const userListSchema = [userSchema];
 
     if (!head) {
-        url = "/api/v1/employees?head=null";
+        urlParams.head = "null";
     } else {
         url = `/api/v1/employees/${head}/subordinates`
     }
+
+    if (loadingData && loadingData.currentPage > 0) {
+        urlParams.page = loadingData.currentPage + 1;
+    }
+
+    let urlQuery = Object.keys(urlParams).map(function (paramName) {
+        return encodeURIComponent(paramName) + "=" + encodeURIComponent(urlParams[paramName]);
+    }).join('&');
+    if (urlQuery) {
+        url += "?" + urlQuery;
+    }
+
     dispatch(startLoading(head));
     axios({url: url}).then(response => {
         const normalizedData = normalize(response.data.data, userListSchema);
         let loadingData = {isLoading: false};
         if (response.data.meta) {
+            console.log(response.data.meta.pagination);
             loadingData.currentPage = response.data.meta.pagination["current_page"];
             loadingData.totalPages = response.data.meta.pagination["total_pages"];
+            loadingData.total = response.data.meta.pagination["total"];
             loadingData.isFullLoaded = (loadingData.currentPage >= loadingData.totalPages);
         } else {
             loadingData.isFullLoaded = true;
+            /*
             loadingData.currentPage = 0;
             loadingData.totalPages = 0;
+             loadingData.total = 0;*/
         }
         dispatch(getEmployees(normalizedData.entities.employees, head, normalizedData.result, loadingData));
     }).catch(error => {

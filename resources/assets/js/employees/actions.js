@@ -38,17 +38,12 @@ export const getEmployeesData = (head, loadingData) => dispatch => {
         const normalizedData = normalize(response.data.data, userListSchema);
         let loadingData = {isLoading: false};
         if (response.data.meta) {
-            console.log(response.data.meta.pagination);
             loadingData.currentPage = response.data.meta.pagination["current_page"];
             loadingData.totalPages = response.data.meta.pagination["total_pages"];
             loadingData.total = response.data.meta.pagination["total"];
             loadingData.isFullLoaded = (loadingData.currentPage >= loadingData.totalPages);
         } else {
             loadingData.isFullLoaded = true;
-            /*
-            loadingData.currentPage = 0;
-            loadingData.totalPages = 0;
-             loadingData.total = 0;*/
         }
         dispatch(getEmployees(normalizedData.entities.employees, head, normalizedData.result, loadingData));
     }).catch(error => {

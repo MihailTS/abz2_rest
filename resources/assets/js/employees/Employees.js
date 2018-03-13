@@ -53,7 +53,7 @@ export default class Employees extends Component {
         return (
             <div style={{"paddingLeft": this.props.level * 10}} key={this.props.id}>
                 {!this.isRootLevel() ? this.props.currentEmployee.name : null}
-                {!this.isFullLoaded() &&
+                {!this.isRootLevel() && (!this.isFullLoaded() || this.hasChildren()) &&
                 <button onClick={this.toggleNode}>{(this.isOpened()) ? "-" : "+"}</button>
                 }
                 {this.isOpened() ? this.renderChildren() : null}

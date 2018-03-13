@@ -61599,7 +61599,9 @@
             _createClass(Employees, [{
                 key: 'componentDidMount',
                 value: function componentDidMount() {
-                    //this.props.getEmployeesData();
+                    if (this.props.id === 0) {
+                        this.props.getEmployeesData();
+                    }
                 }
             }, {
                 key: 'renderChildren',
@@ -61619,7 +61621,6 @@
                             name: employee.name,
                             level: _this2.props.level + 1,
                             openNext: function openNext() {
-                                console.log(employee.id);
                                 return _this2.props.getEmployeesData(employee.id);
                             }
                         });
@@ -61630,11 +61631,12 @@
                 value: function render() {
                     var _this3 = this;
 
+                    var rootLevel = this.props.level === 0;
                     return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                         'div',
                         {style: {"paddingLeft": this.props.level * 10}, key: this.props.id},
-                        this.props.name,
-                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        !rootLevel ? this.props.name : null,
+                        !rootLevel && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                             'button',
                             {
                                 onClick: function onClick() {
@@ -61644,22 +61646,21 @@
                             this.props.open ? "-" : "+"
                         ),
                         this.renderChildren()
-                    )
-                        /*<div className="container">
-                         <div className="row">
-                         {this.props.employees.map((employee, i) =>
-                         <EmployeeItem
-                         key={employee.id}
-                         id={employee.id}
-                         name={employee.name}
-                         level={0}
-                         openNextEmployeesLevel={(id)=>(()=>{console.log(id);this.props.openNextEmployeesLevel(id)})}
-                         childEmployeesNode={this.props.childrenNode}
-                         />
-                         )}
-                         </div>
-                         </div>*/
-                        ;
+                    );
+                    /*<div className="container">
+                     <div className="row">
+                     {this.props.employees.map((employee, i) =>
+                     <EmployeeItem
+                     key={employee.id}
+                     id={employee.id}
+                     name={employee.name}
+                     level={0}
+                     openNextEmployeesLevel={(id)=>(()=>{console.log(id);this.props.openNextEmployeesLevel(id)})}
+                     childEmployeesNode={this.props.childrenNode}
+                     />
+                     )}
+                     </div>
+                     </div>*/
                 }
             }]);
 
@@ -61700,13 +61701,15 @@
                 employees: employees
             };
         };
-
         var getEmployeesData = function getEmployeesData(head) {
             return function (dispatch) {
+                var url = "";
                 if (!head) {
-                    head = "null";
+                    url = "/api/v1/employees?head=null";
+                } else {
+                    url = '/api/v1/employees/' + head + '/subordinates';
                 }
-                __WEBPACK_IMPORTED_MODULE_0_axios___default()({url: '/api/v1/employees?head=' + head}).then(function (response) {
+                __WEBPACK_IMPORTED_MODULE_0_axios___default()({url: url}).then(function (response) {
                     dispatch(getEmployees(response.data.data));
                 }).catch(function (error) {
                     console.log(error);
@@ -61797,11 +61800,8 @@
 
             switch (action.type) {
                 case 'GET_EMPLOYEES':
-                    console.log(action.employees);
                     return _extends({}, state, {
-                        employees: [].concat(_toConsumableArray(state.employees), _toConsumableArray(action.employees.map(function (item) {
-                            return _extends({}, item, {test: item.page ? item.page + 1 : 1});
-                        })))
+                        employees: [].concat(_toConsumableArray(state.employees), _toConsumableArray(action.employees))
             });
                     break;
                 case 'OPEN_EMPLOYEES_NODE':

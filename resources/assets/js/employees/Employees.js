@@ -3,7 +3,9 @@ import EmployeesContainer from './EmployeesContainer';
 
 export default class Employees extends Component {
     componentDidMount() {
-        //this.props.getEmployeesData();
+        if (this.props.id === 0) {
+            this.props.getEmployeesData();
+        }
     }
 
     renderChildren() {
@@ -18,21 +20,24 @@ export default class Employees extends Component {
                 name={employee.name}
                 level={this.props.level + 1}
                 openNext={() => {
-                    console.log(employee.id);
                     return this.props.getEmployeesData(employee.id)
                 }}
             />
         )
     }
     render() {
+        const rootLevel = (this.props.level === 0);
         return (
             <div style={{"paddingLeft": this.props.level * 10}} key={this.props.id}>
-                {this.props.name}
-                {<button onClick={() => {
+                {!rootLevel ? this.props.name : null}
+                {!rootLevel &&
+                <button onClick={() => {
                     return this.props.getEmployeesData(this.props.id)
-                }}>{(this.props.open) ? "-" : "+"}</button>}
+                }}>{(this.props.open) ? "-" : "+"}</button>
+                }
                 {this.renderChildren()}
             </div>
+        );
             /*<div className="container">
                 <div className="row">
                     {this.props.employees.map((employee, i) =>
@@ -47,6 +52,6 @@ export default class Employees extends Component {
                     )}
                 </div>
              </div>*/
-        );
+
     }
 }

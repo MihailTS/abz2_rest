@@ -4,12 +4,14 @@ export const getEmployees = employees => ({
     type: 'GET_EMPLOYEES',
     employees
 });
-
 export const getEmployeesData = (head) => dispatch => {
+    let url = "";
     if (!head) {
-        head = "null"
+        url = "/api/v1/employees?head=null";
+    } else {
+        url = `/api/v1/employees/${head}/subordinates`
     }
-    axios({url: ('/api/v1/employees?head=' + head)}).then(response => {
+    axios({url: url}).then(response => {
         dispatch(getEmployees(response.data.data))
     }).catch(error => {
         console.log(error);

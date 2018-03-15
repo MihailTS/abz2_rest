@@ -72,10 +72,10 @@ class EmployeeTransformer extends TransformerAbstract
             ],
             !isset($employee->position_id) ? null : [
                 'rel' => 'position',
-                'href' => route('positions.show', $employee->position_id)
+                'href' => route('employees.position.index', $employee->position_id)
             ],
             [
-                'rel' => 'employees.subordinates.index',
+                'rel' => 'subordinates',
                 'href' => route('employees.subordinates.index', $employee->id)
             ]
         ];

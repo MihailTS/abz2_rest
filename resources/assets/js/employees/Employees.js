@@ -3,7 +3,7 @@ import EmployeesContainer from './EmployeesContainer';
 
 export default class Employees extends Component {
     componentDidMount() {
-        if (this.props.id === 0) {
+        if (this.isRoot()) {//initial load
             this.props.toggleEmployeesNode();
         }
     }
@@ -31,8 +31,8 @@ export default class Employees extends Component {
         return this.props.currentEmployee.isOpened;
     }
 
-    isRootLevel() {
-        return (this.props.level === 0);
+    isRoot() {
+        return (this.props.id === 0);
     }
 
     isLoading() {
@@ -52,8 +52,12 @@ export default class Employees extends Component {
     render() {
         return (
             <div style={{"paddingLeft": this.props.level * 10}} key={this.props.id}>
-                {!this.isRootLevel() ? this.props.currentEmployee.name : null}
-                {!this.isRootLevel() && (!this.isFullLoaded() || this.hasChildren()) &&
+                <div className={this.isRoot() ? "employees_root" : null}>
+                    <div>{this.props.currentEmployee.name}</div>
+                    <div>{this.props.currentEmployee.position}</div>
+                    <div>{this.props.currentEmployee.salary}</div>
+                </div>
+                {!this.isRoot() && (!this.isFullLoaded() || this.hasChildren()) &&
                 <button onClick={this.toggleNode}>{(this.isOpened()) ? "-" : "+"}</button>
                 }
                 {this.isOpened() ? this.renderChildren() : null}

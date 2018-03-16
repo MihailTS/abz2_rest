@@ -1,8 +1,45 @@
 import axios from 'axios'
-
 import {normalize, schema} from 'normalizr';
 
+export const getPositions = (positions) => ({
+    type: 'GET_POSITIONS',
+    positions
+});
+export const getPositionsData = (page) => dispatch => {
+    let url = "/api/v1/positions";
+    let urlParams = {};
+    let urlQuery;
+    let currentPositionsPage;
+    let totalPositionsPage;
 
+    const positionsSchema = new schema.Entity('positions');
+    const positionsListSchema = [positionsSchema];
+
+    if (page) {
+        urlParams.page = page;
+        urlQuery = Object.keys(urlParams).map(function (paramName) {
+            return encodeURIComponent(paramName) + "=" + encodeURIComponent(urlParams[paramName]);
+        }).join('&');
+    }
+    if (urlQuery) {
+        url += "?" + urlQuery;
+    }
+    axios({url: url}).then(response => {
+        const normalizedData = normalize(response.data.data, positionsListSchema);
+        if (response.data.meta) {
+            currentPositionsPage = response.data.meta.pagination["current_page"];
+            totalPositionsPage = response.data.meta.pagination["total_pages"];
+            if (currentPositionsPage < totalPositionsPage) {
+                currentPositionsPage++;
+                dispatch(getPositionsData(currentPositionsPage))
+            }
+        }
+        dispatch(getPositions(normalizedData.entities.positions));
+    }).catch(error => {
+        console.log(error);
+    });
+
+};
 export const getEmployees = (employees, head = 0, childIDs, loadingData) => ({
     type: 'GET_EMPLOYEES',
     employees,
@@ -13,8 +50,8 @@ export const getEmployees = (employees, head = 0, childIDs, loadingData) => ({
 export const getEmployeesData = (head, loadingData) => dispatch => {
     let url = "/api/v1/employees";
     let urlParams = {};
-    const userSchema = new schema.Entity('employees');
-    const userListSchema = [userSchema];
+    const employeesSchema = new schema.Entity('employees');
+    const employeesListSchema = [employeesSchema];
 
     if (!head) {
         urlParams.head = "null";
@@ -35,7 +72,7 @@ export const getEmployeesData = (head, loadingData) => dispatch => {
 
     dispatch(startLoading(head));
     axios({url: url}).then(response => {
-        const normalizedData = normalize(response.data.data, userListSchema);
+        const normalizedData = normalize(response.data.data, employeesListSchema);
         let loadingData = {isLoading: false};
         if (response.data.meta) {
             loadingData.currentPage = response.data.meta.pagination["current_page"];
@@ -63,7 +100,7 @@ export const closeEmployeesNode = (head, childIDs) => ({//close all nested child
     head,
     childIDs
 });
-export const toggleEmployeesNode = (head = 0, isOpened, childIDs) => dispatch => {
+const toggleEmployeesNode = (head = 0, isOpened, childIDs) => dispatch => {
     if (isOpened) {
         dispatch(closeEmployeesNode(head, childIDs));
     } else {
@@ -72,4 +109,8 @@ export const toggleEmployeesNode = (head = 0, isOpened, childIDs) => dispatch =>
         }
         dispatch(openEmployeesNode(head));
     }
+};
+export const initialLoad = () => dispatch => {
+    dispatch(toggleEmployeesNode());
+    dispatch(getPositionsData());
 };

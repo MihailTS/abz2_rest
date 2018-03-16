@@ -4,7 +4,7 @@ import EmployeesContainer from './EmployeesContainer';
 export default class Employees extends Component {
     componentDidMount() {
         if (this.isRoot()) {//initial load
-            this.props.toggleEmployeesNode();
+            this.props.initialLoad();
         }
     }
     renderChildren() {

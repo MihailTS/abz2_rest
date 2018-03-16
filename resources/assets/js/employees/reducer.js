@@ -10,7 +10,8 @@ const initialState = {
             isLoading: false,
             isFullLoaded: true,
         }
-    }
+    },
+    positions: {}
 };
 
 export default (state = initialState, action) => {
@@ -82,6 +83,16 @@ export default (state = initialState, action) => {
                         ...state.loadingData[headID],
                         isLoading: true
                     }
+                }
+            }
+        }
+        case "GET_POSITIONS": {
+            console.log(action.positions);
+            return {
+                ...state,
+                positions: {
+                    ...state.positions,
+                    ...action.positions
                 }
             }
         }

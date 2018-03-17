@@ -3,68 +3,67 @@ import EmployeesContainer from './EmployeesContainer';
 
 export default class Employees extends Component {
     componentDidMount() {
-        if (this.isRoot()) {//initial load
+        if (this.props.id === 0) {//initial load
             this.props.initialLoad();
         }
     }
     renderChildren() {
-        let children = this.props.currentEmployee.childIDs;
-        if (!children) {
+        const {childIDs, isOpened} = this.props.currentEmployee;
+        if (!childIDs || !isOpened) {
             return null;
         }
-        return children.map((childID) =>
+        return childIDs.map((childID) =>
             <EmployeesContainer
                 key={childID}
                 id={childID}
                 level={this.props.level + 1}
             />
         )
-
     }
 
-    hasChildren() {
-        return (typeof this.props.currentEmployee.childIDs !== 'undefined' &&
-        this.props.currentEmployee.childIDs.length > 0)
-    }
+    hasChildren = () => {
+        const {childIDs} = this.props.currentEmployee;
+        return (typeof childIDs !== "undefined" && childIDs.length > 0)
+    };
 
-    isOpened() {
-        return this.props.currentEmployee.isOpened;
-    }
-
-    isRoot() {
-        return (this.props.id === 0);
-    }
-
-    isLoading() {
-        return (this.props.loadingData !== undefined && this.props.loadingData.isLoading);
-    }
-
-    isFullLoaded() {
-        return (this.props.loadingData !== undefined && this.props.loadingData.isFullLoaded);
+    getPositionName(positionID) {
+        return (this.props.positions[positionID] && this.props.positions[positionID].name) || "...";
     }
 
     loadMore = () => (
         this.props.getEmployeesData(this.props.id, this.props.loadingData)
     );
+
     toggleNode = () => (
-        this.props.toggleEmployeesNode(this.props.id, this.isOpened(), this.props.currentEmployee.childIDs)
+        this.props.toggleEmployeesNode(this.props.id, this.props.currentEmployee.isOpened, this.props.currentEmployee.childIDs)
     );
+
+    showOpenButton = () => (
+        !this.props.currentEmployee.id && (!this.props.loadingData.isFullLoaded || this.hasChildren())
+    );
+
     render() {
+        const {id, level, loadingData, currentEmployee} = this.props;
+        const {name, salary, position, childIDs, isOpened, isLoading} = currentEmployee;
+        const {total, isFullLoaded} = loadingData;
+
+        let isRoot = (id === 0);
+        let showOpenButton = !isRoot && (!isFullLoaded || this.hasChildren());
+        let showLoadMore = !isFullLoaded && this.hasChildren() && isOpened;
+
         return (
-            <div style={{"paddingLeft": this.props.level * 10}} key={this.props.id}>
-                <div className={this.isRoot() ? "employees_root" : null}>
-                    <div>{this.props.currentEmployee.name}</div>
-                    <div>{this.props.currentEmployee.position}</div>
-                    <div>{this.props.currentEmployee.salary}</div>
+            <div style={{"paddingLeft": level * 10}} key={id}>
+                <div className={isRoot && "employees_root"}>
+                    <div>{name}</div>
+                    <div>{this.getPositionName(position)}</div>
+                    <div>{salary}</div>
                 </div>
-                {!this.isRoot() && (!this.isFullLoaded() || this.hasChildren()) &&
-                <button onClick={this.toggleNode}>{(this.isOpened()) ? "-" : "+"}</button>
-                }
-                {this.isOpened() ? this.renderChildren() : null}
-                {this.isLoading() && <div>Loading...</div>}
-                {!this.isFullLoaded() && this.hasChildren() && this.isOpened() &&
+                {showOpenButton && <button onClick={this.toggleNode}>{isOpened ? "-" : "+"}</button>}
+                {this.renderChildren()}
+                {isLoading && <div>Loading...</div>}
+                {showLoadMore &&
                 <div style={{"paddingLeft": 15}}>
-                    <span>({this.props.currentEmployee.childIDs.length}/{this.props.loadingData.total})</span>
+                    <span>({childIDs.length}/{total})</span>
                     <button onClick={this.loadMore}>Load more...</button>
                 </div>
                 }

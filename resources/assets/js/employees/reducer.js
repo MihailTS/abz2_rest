@@ -87,7 +87,6 @@ export default (state = initialState, action) => {
             }
         }
         case "GET_POSITIONS": {
-            console.log(action.positions);
             return {
                 ...state,
                 positions: {

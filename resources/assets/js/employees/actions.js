@@ -100,7 +100,7 @@ export const closeEmployeesNode = (head, childIDs) => ({//close all nested child
     head,
     childIDs
 });
-const toggleEmployeesNode = (head = 0, isOpened, childIDs) => dispatch => {
+export const toggleEmployeesNode = (head = 0, isOpened, childIDs) => dispatch => {
     if (isOpened) {
         dispatch(closeEmployeesNode(head, childIDs));
     } else {

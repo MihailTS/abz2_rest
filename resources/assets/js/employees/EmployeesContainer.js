@@ -5,7 +5,7 @@ import * as actions from './actions';
 
 function mapStateToProps(state, ownProps) {
     return {
-        currentEmployee: state.employeesState.employees[ownProps.id],
+        employee: state.employeesState.employees[ownProps.id],
         loadingData: (state.employeesState.loadingData[ownProps.id] || {}),
         positions: state.employeesState.positions
     };

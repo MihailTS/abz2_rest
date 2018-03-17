@@ -1,8 +1,9 @@
+import * as actions from './actionTypes';
 import axios from 'axios'
 import {normalize, schema} from 'normalizr';
 
 export const getPositions = (positions) => ({
-    type: 'GET_POSITIONS',
+    type: actions.GET_POSITIONS,
     positions
 });
 export const getPositionsData = (page) => dispatch => {
@@ -41,7 +42,7 @@ export const getPositionsData = (page) => dispatch => {
 
 };
 export const getEmployees = (employees, head = 0, childIDs, loadingData) => ({
-    type: 'GET_EMPLOYEES',
+    type: actions.GET_EMPLOYEES,
     employees,
     head,
     childIDs,
@@ -88,15 +89,15 @@ export const getEmployeesData = (head, loadingData) => dispatch => {
     });
 };
 export const startLoading = (head) => ({
-    type: 'START_LOADING',
+    type: actions.START_LOADING,
     head
 });
 export const openEmployeesNode = (head) => ({
-    type: 'OPEN_EMPLOYEES_NODE',
+    type: actions.OPEN_EMPLOYEES_NODE,
     head
 });
 export const closeEmployeesNode = (head, childIDs) => ({//close all nested child nodes
-    type: 'CLOSE_EMPLOYEES_NODE',
+    type: actions.CLOSE_EMPLOYEES_NODE,
     head,
     childIDs
 });

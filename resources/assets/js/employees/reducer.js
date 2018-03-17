@@ -1,7 +1,9 @@
+import * as actions from './actionTypes';
+
 const initialState = {
     employees: {
         0: {
-            id: "root",
+            id: 0,
             name: "root"
         }
     },
@@ -17,7 +19,7 @@ const initialState = {
 export default (state = initialState, action) => {
     const headID = action.head;
     switch (action.type) {
-        case 'GET_EMPLOYEES': {
+        case actions.GET_EMPLOYEES: {
             action.childIDs = action.childIDs.filter(         //if child is already in state - ignore this one
                 (childID) => (!(childID in state.employees))
             );
@@ -40,7 +42,7 @@ export default (state = initialState, action) => {
                 }
             };
         }
-        case 'OPEN_EMPLOYEES_NODE': {
+        case actions.OPEN_EMPLOYEES_NODE: {
             return {
                 ...state,
                 employees: {
@@ -52,7 +54,7 @@ export default (state = initialState, action) => {
                 }
             };
         }
-        case 'CLOSE_EMPLOYEES_NODE': {
+        case actions.CLOSE_EMPLOYEES_NODE: {
             let closedChildren = action.childIDs.reduce(//close all nested nodes
                 (closedChildrenObj, item) => ({
                         ...closedChildrenObj,
@@ -74,7 +76,7 @@ export default (state = initialState, action) => {
                 }
             };
         }
-        case "START_LOADING": {
+        case actions.START_LOADING: {
             return {
                 ...state,
                 loadingData: {
@@ -86,7 +88,7 @@ export default (state = initialState, action) => {
                 }
             }
         }
-        case "GET_POSITIONS": {
+        case actions.GET_POSITIONS: {
             return {
                 ...state,
                 positions: {

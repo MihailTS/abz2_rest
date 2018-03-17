@@ -3,12 +3,12 @@ import EmployeesContainer from './EmployeesContainer';
 
 export default class Employees extends Component {
     componentDidMount() {
-        if (this.props.id === 0) {//initial load
+        if (this.props.id === 0) {//is root
             this.props.initialLoad();
         }
     }
     renderChildren() {
-        const {childIDs, isOpened} = this.props.currentEmployee;
+        const {childIDs, isOpened} = this.props.employee;
         if (!childIDs || !isOpened) {
             return null;
         }
@@ -22,7 +22,7 @@ export default class Employees extends Component {
     }
 
     hasChildren = () => {
-        const {childIDs} = this.props.currentEmployee;
+        const {childIDs} = this.props.employee;
         return (typeof childIDs !== "undefined" && childIDs.length > 0)
     };
 
@@ -35,16 +35,16 @@ export default class Employees extends Component {
     );
 
     toggleNode = () => (
-        this.props.toggleEmployeesNode(this.props.id, this.props.currentEmployee.isOpened, this.props.currentEmployee.childIDs)
+        this.props.toggleEmployeesNode(this.props.id, this.props.employee.isOpened, this.props.employee.childIDs)
     );
 
     showOpenButton = () => (
-        !this.props.currentEmployee.id && (!this.props.loadingData.isFullLoaded || this.hasChildren())
+        !this.props.employee.id && (!this.props.loadingData.isFullLoaded || this.hasChildren())
     );
 
     render() {
-        const {id, level, loadingData, currentEmployee} = this.props;
-        const {name, salary, position, childIDs, isOpened, isLoading} = currentEmployee;
+        const {id, level, loadingData, employee} = this.props;
+        const {name, salary, position, childIDs, isOpened, isLoading} = employee;
         const {total, isFullLoaded} = loadingData;
 
         let isRoot = (id === 0);

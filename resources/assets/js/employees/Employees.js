@@ -38,14 +38,10 @@ export default class Employees extends Component {
         this.props.toggleEmployeesNode(this.props.id, this.props.employee.isOpened, this.props.employee.childIDs)
     );
 
-    showOpenButton = () => (
-        !this.props.employee.id && (!this.props.loadingData.isFullLoaded || this.hasChildren())
-    );
-
     render() {
         const {id, level, loadingData, employee} = this.props;
-        const {name, salary, position, childIDs, isOpened, isLoading} = employee;
-        const {total, isFullLoaded} = loadingData;
+        const {name, salary, position, childIDs, isOpened} = employee;
+        const {total, isFullLoaded, isLoading} = loadingData;
 
         let isRoot = (id === 0);
         let showOpenButton = !isRoot && (!isFullLoaded || this.hasChildren());
@@ -58,7 +54,12 @@ export default class Employees extends Component {
                     <div>{this.getPositionName(position)}</div>
                     <div>{salary}</div>
                 </div>
-                {showOpenButton && <button onClick={this.toggleNode}>{isOpened ? "-" : "+"}</button>}
+                {showOpenButton &&
+                <span onClick={this.toggleNode}
+                      style={{"cursor": "pointer"}}
+                      className={isOpened ? "fa fa-minus-circle" : "fa fa-plus-circle"}
+                />
+                }
                 {this.renderChildren()}
                 {isLoading && <div>Loading...</div>}
                 {showLoadMore &&

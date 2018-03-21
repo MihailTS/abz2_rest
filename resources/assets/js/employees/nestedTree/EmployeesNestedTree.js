@@ -1,54 +1,54 @@
 import React, {Component} from 'react';
-import EmployeesContainer from './EmployeesContainer';
+import EmployeesContainer from './EmployeesNestedTreeContainer';
 
 export default class Employees extends Component {
     componentDidMount() {
-        if (this.props.id === 0) {//is root
-            this.props.initialLoad();
+        if (this.props.node && this.props.node.isRoot) {
+            this.initialLoad();
         }
     }
     renderChildren() {
-        const {childIDs, isOpened} = this.props.employee;
-        if (!childIDs || !isOpened) {
+        if (!this.props.node) {
             return null;
         }
-        return childIDs.map((childID) =>
-            <EmployeesContainer
-                key={childID}
-                id={childID}
-                level={this.props.level + 1}
-            />
-        )
+        const {childIDs, isOpened} = this.props.node;
+        if (Array.isArray(childIDs) && isOpened) {
+            return childIDs.map((childID) =>
+                <EmployeesContainer
+                    key={childID}
+                    id={childID}
+                />
+            )
+        }
     }
 
-    hasChildren = () => {
-        const {childIDs} = this.props.employee;
-        return (typeof childIDs !== "undefined" && childIDs.length > 0)
-    };
-
+    initialLoad() {
+        this.props.getEmployeesData();
+        this.props.getPositionsData();
+    }
     getPositionName(positionID) {
         return (this.props.positions[positionID] && this.props.positions[positionID].name) || "...";
     }
 
     loadMore = () => (
-        this.props.getEmployeesData(this.props.id, this.props.loadingData)
+        this.props.getEmployeesData(this.props.id, this.props.node.loadingData)
     );
 
-    toggleNode = () => (
-        this.props.toggleEmployeesNode(this.props.id, this.props.employee.isOpened, this.props.employee.childIDs)
-    );
+    toggleNode = () => {
+        return this.props.toggleEmployeesNode(this.props.id, this.props.node.isOpened, this.props.node.childIDs)
+    };
 
     render() {
-        const {id, level, loadingData, employee} = this.props;
-        const {name, salary, position, childIDs, isOpened} = employee;
+        const {employee, node} = this.props;
+        const {name, salary, position} = employee;
+        const {level, childIDs, isOpened, isRoot, hasChildren, loadingData} = node;
         const {total, isFullLoaded, isLoading} = loadingData;
 
-        let isRoot = (id === 0);
-        let showOpenButton = !isRoot && (!isFullLoaded || this.hasChildren());
-        let showLoadMore = !isFullLoaded && this.hasChildren() && isOpened;
+        let showOpenButton = !isRoot && (!isFullLoaded || hasChildren);
+        let showLoadMore = !isFullLoaded && hasChildren && isOpened;
 
         return (
-            <div style={{"paddingLeft": level * 10}} key={id}>
+            <div style={{"paddingLeft": level * 10}}>
                 <div className={isRoot && "employees_root"}>
                     <div>{name}</div>
                     <div>{this.getPositionName(position)}</div>

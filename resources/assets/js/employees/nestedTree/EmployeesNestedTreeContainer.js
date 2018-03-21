@@ -1,19 +1,23 @@
 import {connect} from 'react-redux';
-import Employees from './Employees';
+import Employees from './EmployeesNestedTree';
 import {bindActionCreators} from 'redux';
 import * as actions from './actions';
+import * as employeesActions from '../actions';
+import * as positionsActions from '../../positions/actions';
 
 function mapStateToProps(state, ownProps) {
     return {
         employee: state.employeesState.employees[ownProps.id],
-        loadingData: (state.employeesState.loadingData[ownProps.id] || {}),
-        positions: state.employeesState.positions
+        node: state.nestedTreeEmployeesState.nodes[ownProps.id],
+        positions: state.positionsState.positions
     };
 }
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
+        ...employeesActions,
         ...actions,
+        ...positionsActions,
     }, dispatch);
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Employees);

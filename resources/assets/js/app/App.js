@@ -1,12 +1,12 @@
 import React from 'react';
 import './../bootstrap';
-import EmployeesContainer from "../employees/EmployeesContainer";
+import EmployeesNestedTreeContainer from "../employees/nestedTree/EmployeesNestedTreeContainer";
 
 export default class App extends React.Component {
     render() {
         return (
             <div id="app">
-                <EmployeesContainer
+                <EmployeesNestedTreeContainer
                     key={0}
                     id={0}
                     level={0}

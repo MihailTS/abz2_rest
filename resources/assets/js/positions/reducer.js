@@ -1,23 +1,19 @@
 import * as actions from './actionTypes';
+
 const initialState = {
-    employees: {
-        0: {
-            id: 0,
-            name: "root",
-        }
-    }
+    positions: {}
 };
 
 export default (state = initialState, action) => {
     switch (action.type) {
-        case actions.GET_EMPLOYEES: {
+        case actions.GET_POSITIONS: {
             return {
                 ...state,
-                employees: {
-                    ...state.employees,
-                    ...action.employees,
+                positions: {
+                    ...state.positions,
+                    ...action.positions
                 }
-            };
+            }
         }
         default:
             return state;

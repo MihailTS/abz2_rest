@@ -1,5 +1,5 @@
 import {connect} from 'react-redux';
-import Employees from './EmployeesNestedTree';
+import Employees from './EmployeesNestedTreeNode';
 import {bindActionCreators} from 'redux';
 import * as actions from './actions';
 import * as employeesActions from '../actions';

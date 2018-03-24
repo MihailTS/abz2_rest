@@ -10,6 +10,120 @@
 //Font Awesome
 @import "~font-awesome/scss/font-awesome.scss";
 
-.employees_root {
+.employee-node_root {
+}
+
+.employee-node_root > .employee-node__info {
   display: none;
+}
+
+.employee-node__info {
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+}
+
+.employee-node__info-item {
+  padding: 0 10px
+}
+
+.employee-node__open-btn {
+  text-align: center;
+  flex: 1 1 0;
+  font-size: 1.8em;
+  cursor: pointer;
+}
+
+.employee-node__name {
+  flex: 4 4 0;
+}
+
+.employee-node__empl-date, .employee-node__salary {
+  flex: 2 2 0;
+}
+
+.employee-node__info-item_sub {
+  font-style: italic;
+  font-size: 0.85em;
+}
+
+.employee-node__info-item_numeric {
+  font-family: "Inconsolata", "Fira Mono", "Source Code Pro", Monaco, Consolas, "Lucida Console", monospace;
+  white-space: nowrap;
+}
+
+.employee-node__load-btn {
+  border: 1px solid black;
+  border-radius: 15px;
+  outline: none;
+  padding: 5px 15px;
+  background: #4c4c4c;
+  color: white;
+}
+
+.employees-tree {
+  max-width: 1200px;
+  margin: 10px auto;
+  width: 80%;
+}
+
+.employees-tree__head {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid black;
+}
+
+.employees-tree__head-item {
+  padding: 0 10px;
+  font-weight: bold;
+}
+
+.employees-tree__head-item-open-btn {
+  flex: 1 1 0;
+}
+
+.employees-tree__head-item-name {
+  flex: 4 4 0;
+}
+
+.employees-tree__head-item-empl-date, .employees-tree__head-item-salary {
+  flex: 2 2 0;
+
+}
+
+.employee-node__loader {
+  border: 4px solid #636b6f;
+  border-radius: 50%;
+  margin: 10px;
+  border-top: 4px solid white;
+  width: 40px;
+  height: 40px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .employees-tree {
+    width: 97%;
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .employee-node__empl-date, .employee-node__salary {
+    display: none;
+  }
+  .employees-tree__head-item-empl-date, .employees-tree__head-item-salary {
+    display: none;
+  }
+  .employee-node__open-btn {
+    font-size: 1.5em;
+  }
 }

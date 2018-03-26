@@ -50,9 +50,9 @@ export default class Employees extends Component {
     loadByScroll = (e) => {
         e.stopPropagation();
         if (
-            !this.props.node.loadingData.isLoading &&
             this.props.node.hasChildren &&
-            this.props.node.isOpened
+            this.props.node.isOpened &&
+            !this.props.node.loadingData.isLoading
         ) {
             let bottomNodePosition = ReactDOM.findDOMNode(this).getBoundingClientRect().bottom - window.innerHeight;
             if (bottomNodePosition <= 100) {
@@ -68,11 +68,10 @@ export default class Employees extends Component {
     render() {
         const {employee, node} = this.props;
         const {name, salary, position, employmentDate} = employee;
-        const {level, childIDs, isOpened, isRoot, hasChildren, loadingData} = node;
-        const {total, isFullLoaded, isLoading} = loadingData;
+        const {level, isOpened, isRoot, hasChildren, loadingData} = node;
+        const {isFullLoaded, isLoading} = loadingData;
 
         let showOpenButton = !isFullLoaded || hasChildren;
-        let showLoadMore = !isFullLoaded && hasChildren && isOpened;
 
         let employeeNodeClass = "employee-node";
         if (isRoot) {

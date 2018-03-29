@@ -10,8 +10,8 @@ export default class App extends React.Component {
     render() {
         return (
             <div id="app">
-                {/*<EmployeesNestedTree/>*/}
-                <EmployeesList/>
+                <EmployeesNestedTree/>
+                {/*<EmployeesList/>*/}
             </div>
         )
     }

@@ -21,4 +21,6 @@ Route::group([
     Route::resource('employees.head', 'Employee\EmployeeHeadController', ['only' => 'index']);
 
     Route::resource('positions', 'Position\PositionController');
+
+    Route::resource('users', 'User\UserController');
 });

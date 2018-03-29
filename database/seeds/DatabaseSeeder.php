@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\User;
 use App\Employee;
 use App\Avatar;
 use App\Position;
@@ -8,6 +9,14 @@ use Illuminate\Support\Facades\Storage;
 
 class DatabaseSeeder extends Seeder
 {
+    private const POSITIONS_LIST = [//список должностей и их количество
+        'Президент' => 1,
+        'Руководитель отдела' => 5,
+        'Заместитель руководителя отдела' => 50,
+        'Менеджер' => 500,
+        'Программист' => 5000,
+        'Стажер' => 50000
+    ];
     /**
      * Run the database seeds.
      *
@@ -15,30 +24,27 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $avatarPath = Storage::disk('avatars')->getAdapter()->getPathPrefix();
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
 
+        User::truncate();
         Avatar::truncate();
         Position::truncate();
         Employee::truncate();
 
+        factory(User::class, 'admin')->create();
+        factory(User::class, 10)->create();
+
+        $avatarPath = Storage::disk('avatars')->getAdapter()->getPathPrefix();
         if(File::exists($avatarPath)) {
             File::cleanDirectory($avatarPath);
         }else{
             File::makeDirectory($avatarPath);
         }
 
-        $positions = [//список должностей и их количество
-            'Президент' => 1,
-            'Руководитель отдела' => 5,
-            'Заместитель руководителя отдела' => 50,
-            'Менеджер' => 500,
-            'Программист' => 5000,
-            'Стажер' => 50000
-        ];
+
         $positionsIDs = [];//массив id должностей с требуемым количеством
 
-        foreach ($positions as $position => $count) {
+        foreach (self::POSITIONS_LIST as $position => $count) {
             $currentPositionID = Position::create(["name" => $position])->id;
             $positionsIDs[$currentPositionID] = $count;
         }

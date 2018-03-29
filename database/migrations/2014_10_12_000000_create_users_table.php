@@ -19,7 +19,12 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->rememberToken();
+            $table->boolean('isAdmin')->default(false);
+            $table->boolean('isVerified')->default(false);
+            $table->string('verification_token')->nullable();
+
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

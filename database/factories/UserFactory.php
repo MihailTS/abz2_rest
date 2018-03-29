@@ -1,7 +1,7 @@
 <?php
 
 use Faker\Generator as Faker;
-
+use App\User;
 /*
 |--------------------------------------------------------------------------
 | Model Factories
@@ -13,11 +13,31 @@ use Faker\Generator as Faker;
 |
 */
 
-$factory->define(App\User::class, function (Faker $faker) {
+$factory->define(User::class, function (Faker $faker) {
+    static $password;
+
+    $isVerified = $faker->boolean();
     return [
         'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
-        'password' => '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm', // secret
+        'password' => $password ?: bcrypt('secret'),
         'remember_token' => str_random(10),
+        'isAdmin' => $faker->boolean(),
+        'isVerified' => $isVerified,
+        'verification_token' => $isVerified ? null : User::generateVerificationCode(),
+    ];
+});
+
+//admin user
+$factory->defineAs(User::class, 'admin', function (Faker $faker) {
+    $isVerified = $faker->boolean();
+    return [
+        'name' => 'admin',
+        'email' => 'tseluiko.m@gmail.com',
+        'password' => 'password',
+        'remember_token' => str_random(10),
+        'isAdmin' => true,
+        'isVerified' => $isVerified,
+        'verification_token' => $isVerified ? null : User::generateVerificationCode(),
     ];
 });

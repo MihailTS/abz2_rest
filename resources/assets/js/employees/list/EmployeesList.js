@@ -1,5 +1,5 @@
 import React from 'react'
-import EmployeesListContent from "./EmployeesListContent";
+import EmployeesListContentContainer from "./EmployeesListContentContainer";
 
 const employeesList = () => (
     <div className="employees-list">
@@ -16,7 +16,7 @@ const employeesList = () => (
                 Размер зарплаты
             </div>
         </div>
-        <EmployeesListContent/>
+        <EmployeesListContentContainer/>
     </div>
 );
 export default employeesList;

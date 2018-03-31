@@ -99,7 +99,7 @@ class PositionController extends ApiController
         }
 
         if (!$position->isDirty()) {
-            return $this->errorResponce('Данные должны отличаться', 422);
+            return $this->errorResponse('Данные должны отличаться', 422);
         }
 
         $position->save();

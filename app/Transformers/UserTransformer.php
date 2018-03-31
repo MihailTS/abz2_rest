@@ -11,6 +11,8 @@ class UserTransformer extends TransformerAbstract
     private static $attributesMap = [
         'id' => "id",
         'name' => "name",
+        'password' => "password",
+        'password_confirmation' => "password_confirmation",
         'email' => "email",
         'createdTime' => "created_at",
         'lastModifiedTime' => "modified_at",
@@ -41,5 +43,11 @@ class UserTransformer extends TransformerAbstract
     public static function getOriginalAttributeName($index)
     {
         return isset(self::$attributesMap[$index]) ? self::$attributesMap[$index] : null;
+    }
+
+    public static function getTransformedAttributeName($index)
+    {
+        $transformedAttributesMap = array_flip(self::$attributesMap);
+        return isset($transformedAttributesMap[$index]) ? $transformedAttributesMap[$index] : null;
     }
 }

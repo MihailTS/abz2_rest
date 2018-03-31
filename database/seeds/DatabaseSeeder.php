@@ -31,6 +31,8 @@ class DatabaseSeeder extends Seeder
         Position::truncate();
         Employee::truncate();
 
+        User::flushEventListeners();
+
         factory(User::class, 'admin')->create();
         factory(User::class, 10)->create();
 

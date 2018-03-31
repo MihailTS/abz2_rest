@@ -34,7 +34,7 @@ $factory->defineAs(User::class, 'admin', function (Faker $faker) {
     return [
         'name' => 'admin',
         'email' => 'tseluiko.m@gmail.com',
-        'password' => 'password',
+        'password' => bcrypt('password'),
         'remember_token' => str_random(10),
         'isAdmin' => true,
         'isVerified' => $isVerified,

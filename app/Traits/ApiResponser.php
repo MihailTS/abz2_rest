@@ -11,12 +11,12 @@ trait ApiResponser
 {
     private $perPage = 15;
 
-    private function successResponce($data, $code)
+    private function successResponse($data, $code)
     {
         return response()->json($data, $code);
     }
 
-    protected function errorResponce($message, $code)
+    protected function errorResponse($message, $code)
     {
         return response()->json(['error' => $message, 'code' => $code], $code);
     }
@@ -24,7 +24,7 @@ trait ApiResponser
     protected function showAll(Collection $collection, $code = 200)
     {
         if ($collection->isEmpty()) {
-            return $this->successResponce(['data' => $collection], $code);
+            return $this->successResponse(['data' => $collection], $code);
         }
         $transformer = $collection->first()->transformer;
 
@@ -33,7 +33,7 @@ trait ApiResponser
         $collection = $this->paginate($collection, $transformer);
         $collection = $this->transformData($collection, $transformer);
         $collection = $this->cacheResponse($collection);
-        return $this->successResponce($collection, $code);
+        return $this->successResponse($collection, $code);
     }
 
     protected function showOne(Model $instance, $code = 200)
@@ -41,7 +41,12 @@ trait ApiResponser
         $transformer = $instance->transformer;
         $instance = $this->transformData($instance, $transformer);
 
-        return $this->successResponce($instance, $code);
+        return $this->successResponse($instance, $code);
+    }
+
+    protected function showMessage($message, $code = 200)
+    {
+        return $this->successResponse(['data' => $message], $code);
     }
 
     protected function sortData(Collection $collection, $transformer)

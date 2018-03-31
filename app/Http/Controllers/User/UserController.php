@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Http\Controllers\ApiController;
-use App\Transformers\UserTransformer;
 use App\User;
+use App\Mail\UserCreated;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
+use App\Transformers\UserTransformer;
+use App\Http\Controllers\ApiController;
 
 class UserController extends ApiController
 {
     public function __construct()
     {
         parent::__construct();
+        //$this->middleware('client.credentials')->only(['store', 'resend']);
 
         $this->middleware('transform.input:' . UserTransformer::class)->only(['store', 'update']);
     }
@@ -34,9 +36,9 @@ class UserController extends ApiController
     public function store(Request $request)
     {
         $rules = [
-            'name' => 'required|min:5',
+            'name' => 'required',
             'email' => 'required|email|unique:users',
-            'password' => 'required|min:8|confirmed'
+            'password' => 'required|min:6|confirmed',
         ];
         $this->validate($request, $rules);
 
@@ -45,7 +47,7 @@ class UserController extends ApiController
         $data['password'] = bcrypt($request->password);
         $data['isAdmin'] = false;
         $data['isVerified'] = false;
-        $data['verification_code'] = User::generateVerificationCode();
+        $data['verification_token'] = User::generateVerificationCode();
 
         $user = User::create($data);
 
@@ -87,7 +89,7 @@ class UserController extends ApiController
             'name' => 'min:5',
             'email' => 'email|unique:users',
             'password' => 'min:8|confirmed',
-            'admin' => 'boolean'
+            'isAdmin' => 'boolean'
         ];
         $this->validate($request, $rules);
 
@@ -96,7 +98,7 @@ class UserController extends ApiController
         }
         if ($request->has('email') && $user->email != $request->email) {
             $user->isVerified = false;
-            $user->verification_code = User::generateVerificationCode();
+            $user->verification_token = User::generateVerificationCode();
             $user->email = $request->email;
         }
         if ($request->has('password')) {
@@ -109,7 +111,7 @@ class UserController extends ApiController
             $user->admin = $request->admin;
         }
         if (!$user->isDirty()) {
-            return $this->errorResponce('Данные должны отличаться', 422);
+            return $this->errorResponse('Данные должны отличаться', 422);
         }
 
         $user->save();
@@ -128,5 +130,25 @@ class UserController extends ApiController
         $user->delete();
 
         return $this->showOne($user);
+    }
+
+    public function verify($token)
+    {
+        $user = User::where('verification_token', $token)->firstOrFail();
+        $user->isVerified = true;
+        $user->verification_token = null;
+        $user->save();
+        return $this->showMessage('The account has been verified succesfully');
+    }
+
+    public function resend(User $user)
+    {
+        if ($user->isVerified()) {
+            return $this->errorResponse('This user is already verified', 409);
+        }
+        retry(5, function () use ($user) {
+            Mail::to($user)->send(new UserCreated($user));
+        }, 100);
+        return $this->showMessage('The verification email has been resend');
     }
 }

@@ -134,7 +134,7 @@ class EmployeeController extends ApiController
         }
 
         if(!$employee->isDirty()){
-            return $this->errorResponce('Данные должны отличаться', 422);
+            return $this->errorResponse('Данные должны отличаться', 422);
         }
 
         $employee->save();
